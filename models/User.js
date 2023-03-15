@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
-const assignmentSchema = require("./Assignment");
+const thoughtSchema = require("./Thought");
 
-// Schema to create Student model
+// Schema to create User model
 const userSchema = new Schema(
   {
     username: {
@@ -27,7 +27,7 @@ const userSchema = new Schema(
       required: true,
       max_length: 50,
     },
-    thoughts: [thoughtsSchema],
+    thoughts: [thoughtSchema],
     friends: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +47,6 @@ const validateEmail = function (email) {
   return regex.test(email);
 };
 
-const Student = model("user", userSchema);
+const User = model("user", userSchema);
 
 module.exports = User;
