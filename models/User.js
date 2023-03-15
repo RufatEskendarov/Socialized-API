@@ -1,43 +1,52 @@
 const { Schema, model } = require("mongoose");
+const assignmentSchema = require("./Assignment");
 
-// Schema to create User model
+// Schema to create Student model
 const userSchema = new Schema(
   {
-    first: String,
-    last: String,
-    age: Number,
-    videos: [
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      unique: true,
+      required: true,
+      validate: [validateEmail, "Please fill a valid email address"],
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please fill a valid email address",
+      ],
+    },
+    github: {
+      type: String,
+      required: true,
+      max_length: 50,
+    },
+    thoughts: [thoughtsSchema],
+    friends: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Video",
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
       },
     ],
   },
   {
-    // Mongoose supports two Schema options to transform Objects after querying MongoDb: toJSON and toObject.
-    // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
     toJSON: {
-      virtuals: true,
+      getters: true,
     },
-    id: false,
   }
 );
 
-// Create a virtual property `fullName` that gets and sets the user's full name
-userSchema
-  .virtual("fullName")
-  // Getter
-  .get(function () {
-    return `${this.first} ${this.last}`;
-  })
-  // Setter to set the first and last name
-  .set(function (v) {
-    const first = v.split(" ")[0];
-    const last = v.split(" ")[1];
-    this.set({ first, last });
-  });
+const validateEmail = function (email) {
+  const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return regex.test(email);
+};
 
-// Initialize our User model
-const User = model("user", userSchema);
+const Student = model("user", userSchema);
 
 module.exports = User;
