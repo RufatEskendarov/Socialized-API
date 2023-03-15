@@ -2,10 +2,6 @@ const { Schema, Types } = require("mongoose");
 
 const thoughtSchema = new Schema(
   {
-    reactionId: {
-      type: Schema.Types.ObjectId,
-      default: () => new Types.ObjectId(),
-    },
     thoughtText: {
       type: String,
       required: true,
@@ -15,6 +11,9 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
+      get: (date) => {
+        if (date) return date.toISOString().split("T")[0];
+      },
     },
     username: {
       type: String,
@@ -34,8 +33,10 @@ const thoughtSchema = new Schema(
 
 thoughtSchema
   .virtual("reactionCount")
-  .get(() => this.reactions)
-  .set((arr) => {
+  .get(function () {
+    return this.reactions;
+  })
+  .set(function (arr) {
     const arrLength = arr.length;
     this.set(arrLength);
   });
