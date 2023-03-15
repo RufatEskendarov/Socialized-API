@@ -40,4 +40,5 @@ thoughtSchema
     this.set(arrLength);
   });
 
-module.exports = thoughtSchema;
+const Thought = model("thought", thoughtSchema);
+module.exports = Thought;
