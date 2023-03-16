@@ -16,7 +16,6 @@ const userSchema = new Schema(
       lowercase: true,
       unique: true,
       required: true,
-      validate: [validateEmail, "Please fill a valid email address"],
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         "Please fill a valid email address",
@@ -27,26 +26,31 @@ const userSchema = new Schema(
       required: true,
       max_length: 50,
     },
-    thoughts: [thoughtSchema],
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Thought",
+      },
+    ],
     friends: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User",
       },
     ],
   },
   {
     toJSON: {
+      virtuals: true,
       getters: true,
     },
   }
 );
 
-const validateEmail = function (email) {
-  const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  return regex.test(email);
-};
+userSchema.virtual("friendCount").get(function () {
+  return this.friends.length;
+});
 
-const User = model("user", userSchema);
+const User = model("User", userSchema);
 
 module.exports = User;
