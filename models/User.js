@@ -21,11 +21,7 @@ const userSchema = new Schema(
         "Please fill a valid email address",
       ],
     },
-    github: {
-      type: String,
-      required: true,
-      max_length: 50,
-    },
+
     thoughts: [
       {
         type: Schema.Types.ObjectId,

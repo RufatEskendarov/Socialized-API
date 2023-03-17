@@ -63,6 +63,7 @@ const getRandomThoughts = (int) => {
     results.push({
       thoughtText: getRandomArrItem(thoughts),
       username: getRandomArrItem(usernames),
+      createdAt: new Date(),
       reactions: [...getThoughtComments(2)],
     });
   }

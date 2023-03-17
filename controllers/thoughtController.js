@@ -26,13 +26,13 @@ const thoughtController = {
 
   // ADD thought to user
   addThought({ body }, res) {
-    const userId = body.userId;
+    const username = body.username;
     console.log(body);
     Thought.create(body)
       .then((dbThoughtData) => {
-        console.log(userId);
+        console.log(username);
         return User.findOneAndUpdate(
-          { _id: userId },
+          { username: username },
           { $push: { thoughts: dbThoughtData._id } },
           { new: true }
         );
